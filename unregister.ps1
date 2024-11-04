@@ -1,0 +1,1 @@
+Remove-EventLog -Source "ImpartInspector"
