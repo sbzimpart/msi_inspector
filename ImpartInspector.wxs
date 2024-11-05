@@ -15,7 +15,7 @@
       Value="../resources/Background.png" />
 
     <ui:WixUI
-        Id="WixUI_InstallDir"
+        Id="WixUI_InstallDir2"
         InstallDirectory="INSTALLFOLDER"/>
 
     <!-- Directory setup -->
