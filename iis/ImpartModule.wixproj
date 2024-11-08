@@ -18,4 +18,8 @@
   <ItemGroup>
     <WixSource Include="ImpartModule.wxs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\common\CustomLicenseAgreementDlg.wxs" />
+  </ItemGroup>
 </Project>

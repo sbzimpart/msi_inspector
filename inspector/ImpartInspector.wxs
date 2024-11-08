@@ -8,18 +8,10 @@
     <Property Id="SERVICE_PASSWORD" Secure="yes" />
     <Property Id="API_KEY" Secure="yes" />
 
-    <WixVariable Id="WixUILicenseRtf" Value="../resources/Terms of Use.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="../resources/TopBar.png" />      
+    <WixVariable Id="WixUIDialogBmp" Value="../resources/Background.png" />
 
-    <WixVariable
-      Id="WixUIBannerBmp"
-      Value="../resources/TopBar.png" />      
-    <WixVariable
-      Id="WixUIDialogBmp"
-      Value="../resources/Background.png" />
-
-    <ui:WixUI
-        Id="WixUI_InstallDirCustom"
-        InstallDirectory="INSTALLFOLDER"/>
+    <ui:WixUI Id="WixUI_InstallDirCustom" InstallDirectory="INSTALLFOLDER"/>
 
     <!-- Directory setup -->
     <StandardDirectory Id="ProgramFiles64Folder">

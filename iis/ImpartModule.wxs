@@ -1,27 +1,20 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-  <Package Name="ImpartModule" Language="1033" Version="$(var.ProductVersion)" 
+  <Package Name="Impart IIS Module" Language="1033" Version="$(var.ProductVersion)" 
     Manufacturer="Impart Security" 
     UpgradeCode="6cb84dbd-5bbd-44c4-88df-7e9f4810fac2" >
 
-    <Icon Id="AppIcon" SourceFile="impart-security.ico" />
+    <Icon Id="AppIcon" SourceFile="../resources/impart-security.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
-    <WixVariable Id="WixUILicenseRtf" Value="../resources/Terms of Use.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="../resources/TopBar.png" />      
+    <WixVariable Id="WixUIDialogBmp" Value="../resources/Background.png" />
 
-    <WixVariable
-      Id="WixUIBannerBmp"
-      Value="../resources/TopBar.png" />      
-    <WixVariable
-      Id="WixUIDialogBmp"
-      Value="../resources/Background.png" />
-
-    <ui:WixUI
-        Id="WixUI_InstallDir"
-        InstallDirectory="INSTALLFOLDER"/>
+    <ui:WixUI Id="WixUI_InstallDirCustom" InstallDirectory="INSTALLFOLDER"/>
 
     <MediaTemplate EmbedCab="yes" />
     <Feature Id="MainFeature" Title="IIS ImpartModule" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ImpartSchemaFileComponent" />
     </Feature>
 
     <InstallExecuteSequence>
@@ -34,13 +27,26 @@
         <Directory Id="INSTALLFOLDER" Name="IIS" />
       </Directory>
     </StandardDirectory>
+
+    <StandardDirectory Id="System64Folder">
+      <Directory Id="inetsrv" Name="inetsrv">
+        <Directory Id="config" Name="config">
+          <Directory Id="schema" Name="schema">
+            <Component Id="ImpartSchemaFileComponent" Guid="8ebb813e-1471-4b9c-8361-70b62efb69f7">
+              <File Id="ImpartSchemaFile" Source="ImpartModuleConfig.xml" KeyPath="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
   </Package>
 
   <Fragment>
     <DirectoryRef Id="INSTALLFOLDER">
       <Component Id="ImpartModule.dll" Guid="1bc1cd30-7204-4d35-b244-4c1cba10b5e2">
         <CreateFolder />
-        <File Id="ImpartModuleDll" Source="..\build\src\ImpartModule.dll" KeyPath="yes" />
+        <File Id="ImpartModuleDll" Source="..\..\build\src\ImpartModule.dll" KeyPath="yes" />
         <File Id="RegisterIISModuleScript" Source="register.ps1" />
         <File Id="UnRegisterIISModuleScript" Source="unregister.ps1" />
 
@@ -49,8 +55,7 @@
         <RemoveFile Id="RemoveUnregisterScript" Name="unregister.ps1" On="uninstall" />
 
         <RemoveFolder Id="RemoveINSTALLFOLDER" Directory="INSTALLFOLDER" On="uninstall" />
-      </Component>
-      
+      </Component>      
     </DirectoryRef>
 
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">

@@ -1,0 +1,15 @@
+<configSchema>
+    <sectionSchema name="ImpartModuleConfig">
+        <attribute name="enabled" type="bool" defaultValue="true" />
+        <attribute name="enableTraceLogs" type="bool" defaultValue="false" />
+        <attribute name="inspectorAddr" type="string" />
+        <attribute name="maxBodySize" type="uint" defaultValue="10000" />
+        <attribute name="traceLogsLocation" type="string" default="%SystemDrive%\inetpub\logs\impart.log" />
+
+        <element name="ignorePaths">
+            <collection addElement="add">
+                <attribute name="value" type="string" />
+            </collection>
+        </element>
+    </sectionSchema>
+</configSchema>
