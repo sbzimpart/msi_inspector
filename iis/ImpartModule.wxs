@@ -1,0 +1,84 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package Name="ImpartModule" Language="1033" Version="$(var.ProductVersion)" 
+    Manufacturer="Impart Security" 
+    UpgradeCode="6cb84dbd-5bbd-44c4-88df-7e9f4810fac2" >
+
+    <Icon Id="AppIcon" SourceFile="impart-security.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="../resources/Terms of Use.rtf" />
+
+    <WixVariable
+      Id="WixUIBannerBmp"
+      Value="../resources/TopBar.png" />      
+    <WixVariable
+      Id="WixUIDialogBmp"
+      Value="../resources/Background.png" />
+
+    <ui:WixUI
+        Id="WixUI_InstallDir"
+        InstallDirectory="INSTALLFOLDER"/>
+
+    <MediaTemplate EmbedCab="yes" />
+    <Feature Id="MainFeature" Title="IIS ImpartModule" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+
+    <InstallExecuteSequence>
+        <Custom Before="InstallFinalize" Action="RegisterIISModule" Condition="NOT Installed"/>
+        <Custom Action="UnRegisterIISModule" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot; OR REINSTALL"/>
+    </InstallExecuteSequence>
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="ImpartSecurity" Name="Impart Security">
+        <Directory Id="INSTALLFOLDER" Name="IIS" />
+      </Directory>
+    </StandardDirectory>
+  </Package>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="ImpartModule.dll" Guid="1bc1cd30-7204-4d35-b244-4c1cba10b5e2">
+        <CreateFolder />
+        <File Id="ImpartModuleDll" Source="..\build\src\ImpartModule.dll" KeyPath="yes" />
+        <File Id="RegisterIISModuleScript" Source="register.ps1" />
+        <File Id="UnRegisterIISModuleScript" Source="unregister.ps1" />
+
+        <RemoveFile Id="RemoveImpartModuleDll" Name="ImpartModule.dll" On="uninstall" />
+        <RemoveFile Id="RemoveRegisterScript" Name="register.ps1" On="uninstall" />
+        <RemoveFile Id="RemoveUnregisterScript" Name="unregister.ps1" On="uninstall" />
+
+        <RemoveFolder Id="RemoveINSTALLFOLDER" Directory="INSTALLFOLDER" On="uninstall" />
+      </Component>
+      
+    </DirectoryRef>
+
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <ComponentRef Id="ImpartModule.dll" />
+    </ComponentGroup>
+
+    <SetProperty Id="RegisterIISModule"
+        Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -ExecutionPolicy Bypass -NonInteractive -NoProfile -File &quot;[INSTALLFOLDER]register.ps1&quot; -dllPath &quot;[INSTALLFOLDER]ImpartModule.dll&quot;"
+        Before="RegisterIISModule"
+        Sequence="execute" />
+
+    <CustomAction Id="RegisterIISModule"
+        DllEntry="WixQuietExec64"
+        Execute="deferred"
+        Return="check"
+        Impersonate="no"
+        BinaryRef="Wix4UtilCA_X64" />
+
+    <SetProperty Id="UnRegisterIISModule"
+        Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -ExecutionPolicy Bypass -NonInteractive -NoProfile -File &quot;[INSTALLFOLDER]unregister.ps1&quot;"
+        Before="UnRegisterIISModule"
+        Sequence="execute" />
+
+    <CustomAction Id="UnRegisterIISModule"
+        DllEntry="WixQuietExec64"
+        Execute="deferred"
+        Return="check"
+        Impersonate="no"
+        BinaryRef="Wix4UtilCA_X64" />
+  </Fragment>
+</Wix>
