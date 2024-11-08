@@ -64,7 +64,7 @@
           Arguments="--http_listener_disable_tls --mode tcp_server --api_access_token_file_path &quot;[INSTALLFOLDER]accessToken.config&quot;"/>
 
         <!-- Service Control -->
-        <ServiceControl Id="StartImpartInspectorService" Start="install" Name="Impart Inspector" Stop="both" Remove="uninstall" Wait="yes" />
+        <ServiceControl Id="StartImpartInspectorService" Name="Impart Inspector" Stop="both" Remove="uninstall" Wait="yes" />
       </Component>
     </DirectoryRef>
 
